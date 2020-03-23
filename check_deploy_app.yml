@@ -1,0 +1,24 @@
+---
+- name: Ensure application is deployed
+  hosts: preprod
+
+  become: true
+  vars_files:
+    - "files/secrets/devops.yml"
+
+  tasks:
+    - block:
+      - name: Check that you can connect to webpage
+        uri:
+          url: http://54.80.73.222
+        retries: 8
+        delay: 30
+
+      - name: Check webservice application production
+        uri:
+          url: http://54.80.73.222/health
+          method: GET
+        retries: 8
+        delay: 30
+      tags:
+        - preprod
